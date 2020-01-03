@@ -6,7 +6,7 @@ package s3web
 import (
 	"errors"
 	"fmt"
-	"github.com/titan-data/remote-sdk-go/pkg/remote"
+	"github.com/titan-data/remote-sdk-go/remote"
 	"net/url"
 	"reflect"
 	"strings"
@@ -19,17 +19,17 @@ func (s s3webRemote) Type() string {
 	return "s3web"
 }
 
-func (s s3webRemote) FromURL(url url.URL, additionalProperties map[string]string) (map[string]interface{}, error) {
+func (s s3webRemote) FromURL(url *url.URL, additionalProperties map[string]string) (map[string]interface{}, error) {
 	if url.Scheme != "s3web" {
 		return nil, errors.New("invalid remote scheme")
 	}
 
 	if url.User != nil {
-		return nil, errors.New("username and password cannot be specified")
+		return nil, errors.New("remote username and password cannot be specified")
 	}
 
 	if url.Hostname() == "" {
-		return nil, errors.New("missing host name in remote")
+		return nil, errors.New("missing remote host name")
 	}
 
 	if len(additionalProperties) != 0 {
