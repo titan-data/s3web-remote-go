@@ -1,4 +1,4 @@
-module github.com/titan-data/nop-client-go
+module github.com/titan-data/s3web-remote-go
 
 require (
 	github.com/stretchr/testify v1.4.0
