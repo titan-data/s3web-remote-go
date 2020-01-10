@@ -6,75 +6,66 @@ package s3web
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/titan-data/remote-sdk-go/remote"
-	"net/url"
 	"testing"
 )
 
 func TestRegistered(t *testing.T) {
 	r := remote.Get("s3web")
-	assert.Equal(t, "s3web", r.Type())
+	ret, _ := r.Type()
+	assert.Equal(t, "s3web", ret)
 }
 
 func TestFromURL(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web://host/object/path")
-	props, _ := r.FromURL(u, map[string]string{})
+	props, _ := r.FromURL("s3web://host/object/path", map[string]string{})
 	assert.Equal(t, "http://host/object/path", props["url"])
 }
 
 func TestNoPath(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web://host")
-	props, _ := r.FromURL(u, map[string]string{})
+	props, _ := r.FromURL("s3web://host", map[string]string{})
 	assert.Equal(t, "http://host", props["url"])
 }
 
 func TestBadProperty(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web://host")
-	_, err := r.FromURL(u, map[string]string{"a": "b"})
+	_, err := r.FromURL("s3web://host", map[string]string{"a": "b"})
 	assert.NotNil(t, err)
 }
 
 func TestBadScheme(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web")
-	_, err := r.FromURL(u, map[string]string{})
+	_, err := r.FromURL("s3web", map[string]string{})
 	assert.NotNil(t, err)
 }
 
 func TestBadSchemeName(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("foo://bar")
-	_, err := r.FromURL(u, map[string]string{})
+	_, err := r.FromURL("foo://bar", map[string]string{})
 	assert.NotNil(t, err)
 }
 
 func TestBadUser(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web://user@host/path")
-	_, err := r.FromURL(u, map[string]string{})
+	_, err := r.FromURL("s3web://user@host/path", map[string]string{})
 	assert.NotNil(t, err)
 }
 
 func TestBadUserPassword(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web://user:password@host/path")
-	_, err := r.FromURL(u, map[string]string{})
+	_, err := r.FromURL("s3web://user:password@host/path", map[string]string{})
 	assert.NotNil(t, err)
 }
 
 func TestBadNoHost(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web:///path")
-	_, err := r.FromURL(u, map[string]string{})
+	_, err := r.FromURL("s3web:///path", map[string]string{})
 	assert.NotNil(t, err)
 }
 
 func TestPort(t *testing.T) {
 	r := remote.Get("s3web")
-	u, _ := url.Parse("s3web://host:1023/object/path")
-	props, _ := r.FromURL(u, map[string]string{})
+	props, _ := r.FromURL("s3web://host:1023/object/path", map[string]string{})
 	assert.Equal(t, "http://host:1023/object/path", props["url"])
 }
 
